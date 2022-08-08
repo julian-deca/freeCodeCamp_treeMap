@@ -24,20 +24,31 @@ async function getData() {
     });
 }
 async function proceede() {
-  const fullData = await getData();
-  const action = fullData.children[0];
-  const drama = fullData.children[1];
-  const adventure = fullData.children[2];
-  const family = fullData.children[3];
-  const animation = fullData.children[4];
-  const comedy = fullData.children[5];
-  const biography = fullData.children[6];
+  const movies = await getData();
+
+  console.log(movies);
+  const valueScale = d3
+    .scaleLinear()
+    .domain([
+      d3.min(movies.children, (d) => {
+        return d.children.reduce((a, e) => {
+          return e.value < a.value ? e : a;
+        }).value;
+      }),
+      d3.max(movies.children, (d) => {
+        return d.children.reduce((a, e) => {
+          return e.value > a.value ? e : a;
+        });
+      }).value,
+    ])
+    .range([padding, 300]);
+
+  console.log();
 
   const block = svg.append("g");
-  console.log(action);
   block
     .selectAll("g")
-    .data(fullData.children)
+    .data(movies.children)
     .enter()
     .append("g")
     .attr("genre", (d) => d.name)
@@ -45,8 +56,8 @@ async function proceede() {
     .data((d) => d.children)
     .enter()
     .append("rect")
-    .attr("width", 250)
-    .attr("height", 250)
+    .attr("width", (d) => valueScale(d.value) / 2)
+    .attr("height", (d) => valueScale(d.value) / 2)
     .attr("x", 250)
     .attr("y", 250);
 
@@ -58,5 +69,4 @@ async function proceede() {
     .attr("height", 250)
     .attr("x", 250)
     .attr("y", 250);*/
-  console.log(fullData);
 }
