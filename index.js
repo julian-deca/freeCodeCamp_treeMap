@@ -3,8 +3,8 @@ d3.select("div")
   .append("h2")
   .attr("id", "description")
   .text("Top 100 Most Sold Movies Games Grouped by Genre");
-const w = 1000;
-const h = 500;
+const w = 1500;
+const h = 700;
 const padding = 70;
 const svg = d3.select("div").append("svg").attr("width", w).attr("height", h);
 const div = d3
@@ -26,12 +26,11 @@ async function getData() {
 async function proceede() {
   const movies = await getData();
 
-  const treemap = d3.treemap().size([1000, 500]).padding(1);
+  const treemap = d3.treemap().size([1500, 700]).padding(1);
   const root = d3.hierarchy(movies).sum((d) => d.value);
   treemap(root);
 
-  const block = svg.append("g");
-  block
+  const block = svg
     .selectAll("g")
     .data(root.descendants())
     .enter()
@@ -39,7 +38,9 @@ async function proceede() {
     .attr("transform", (d) => {
       return "translate(" + [d.x0, d.y0] + ")";
     })
-    .attr("class", "group")
+    .attr("class", "group");
+
+  block
     .append("rect")
     .attr("class", (d) => {
       return d.data.category ? "tile" : "genre";
@@ -82,5 +83,22 @@ async function proceede() {
       }
       return "black";
     });
+
+  block
+    .append("foreignObject")
+    .attr("width", (d) => {
+      return d.x1 - d.x0;
+    })
+    .attr("height", (d) => {
+      return d.y1 - d.y0;
+    })
+    .attr("display", "flex")
+    .attr("flex-wrap", "wrap")
+    .append("xhtml:div")
+    .style("font", "13px 'Helvetica Neue'")
+    .html((d) => {
+      return d.data.name;
+    });
+
   console.log(movies);
 }
