@@ -5,3 +5,9 @@
   stroke: black;
   stroke-width: 2;
 }
+#tooltip {
+  background-color: rgb(250, 243, 180);
+  padding: 8px;
+  border-radius: 5px;
+  position: absolute;
+}

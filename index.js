@@ -38,7 +38,27 @@ async function proceede() {
     .attr("transform", (d) => {
       return "translate(" + [d.x0, d.y0] + ")";
     })
-    .attr("class", "group");
+    .attr("class", "group")
+    .on("mouseover", (evt, d) => {
+      console.log(d.data.value);
+      div
+        .style("opacity", 0.9)
+        .attr("data-value", d.data.value)
+        .html(
+          "Name: " +
+            d.data.name +
+            "<br/>Genre: " +
+            d.data.category +
+            "<br/>Value: $" +
+            Math.round(d.data.value / 1000000) +
+            ",000,000"
+        )
+        .style("left", evt.x + 20 + "px")
+        .style("top", evt.y + "px");
+    })
+    .on("mouseout", (evt, d) => {
+      div.style("opacity", 0);
+    });
 
   block
     .append("rect")
