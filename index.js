@@ -5,7 +5,6 @@ d3.select("div")
   .text("Top 100 Most Sold Movies Games Grouped by Genre");
 const w = 1500;
 const h = 750;
-const padding = 70;
 const svg = d3.select("div").append("svg").attr("width", w).attr("height", h);
 const div = d3
   .select("div")
@@ -171,6 +170,4 @@ async function proceede() {
       }
     })
     .attr("class", "legend-item");
-
-  console.log(movies);
 }
