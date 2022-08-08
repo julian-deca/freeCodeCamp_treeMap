@@ -1,3 +1,7 @@
 .container {
   text-align: center;
 }
+.legend-item {
+  stroke: black;
+  stroke-width: 2;
+}

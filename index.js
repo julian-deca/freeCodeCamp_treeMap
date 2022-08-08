@@ -4,7 +4,7 @@ d3.select("div")
   .attr("id", "description")
   .text("Top 100 Most Sold Movies Games Grouped by Genre");
 const w = 1500;
-const h = 700;
+const h = 750;
 const padding = 70;
 const svg = d3.select("div").append("svg").attr("width", w).attr("height", h);
 const div = d3
@@ -99,6 +99,58 @@ async function proceede() {
     .html((d) => {
       return d.data.name;
     });
+
+  const legend = svg
+    .append("g")
+    .attr("id", "legend")
+    .attr("y", 10)
+    .attr("x", 10);
+  legend
+    .selectAll("text")
+    .data(movies.children)
+    .enter()
+    .append("text")
+    .text((d) => {
+      return d.name;
+    })
+    .attr("dx", (d, i) => {
+      return 150 * i + w / 5;
+    })
+    .attr("dy", h - 10);
+
+  legend
+    .selectAll("rect")
+    .data(movies.children)
+    .enter()
+    .append("rect")
+    .text((d) => {
+      return d.name;
+    })
+    .attr("x", (d, i) => {
+      return 150 * i + w / 5 + 70;
+    })
+    .attr("y", h - 31)
+    .attr("width", 30)
+    .attr("height", 30)
+    .attr("fill", (d, i) => {
+      switch (i) {
+        case 0:
+          return "rgb(247, 153, 109)";
+        case 1:
+          return "rgb(193, 245, 108)";
+        case 2:
+          return "rgb(190, 120, 255)";
+        case 3:
+          return "rgb(70, 120, 255)";
+        case 4:
+          return "rgb(30, 190, 220)";
+        case 5:
+          return "rgb(250, 200, 100)";
+        case 6:
+          return "rgb(200, 70, 150)";
+      }
+    })
+    .attr("class", "legend-item");
 
   console.log(movies);
 }
