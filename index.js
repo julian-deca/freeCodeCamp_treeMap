@@ -26,47 +26,38 @@ async function getData() {
 async function proceede() {
   const movies = await getData();
 
-  console.log(movies);
-  const valueScale = d3
-    .scaleLinear()
-    .domain([
-      d3.min(movies.children, (d) => {
-        return d.children.reduce((a, e) => {
-          return e.value < a.value ? e : a;
-        }).value;
-      }),
-      d3.max(movies.children, (d) => {
-        return d.children.reduce((a, e) => {
-          return e.value > a.value ? e : a;
-        });
-      }).value,
-    ])
-    .range([padding, 300]);
-
-  console.log();
+  const treemap = d3.treemap().size([1000, 500]).paddingOuter(16);
+  const root = d3.hierarchy(movies).sum((d) => d.value);
+  treemap(root);
 
   const block = svg.append("g");
   block
     .selectAll("g")
-    .data(movies.children)
+    .data(root.descendants())
     .enter()
     .append("g")
-    .attr("genre", (d) => d.name)
-    .selectAll("rect")
-    .data((d) => d.children)
-    .enter()
+    .attr("transform", (d) => {
+      return "translate(" + [d.x0, d.y0] + ")";
+    })
+    .attr("class", "group")
     .append("rect")
-    .attr("width", (d) => valueScale(d.value) / 2)
-    .attr("height", (d) => valueScale(d.value) / 2)
-    .attr("x", 250)
-    .attr("y", 250);
-
-  /*.selectAll("rect")
-    .data(fullData.children)
-    .enter()
-    .append("rect")
-    .attr("width", 250)
-    .attr("height", 250)
-    .attr("x", 250)
-    .attr("y", 250);*/
+    .attr("class", (d) => {
+      return d.data.category ? "tile" : "genre " + d.data.name;
+    })
+    .attr("data-name", (d) => {
+      return d.data.name;
+    })
+    .attr("data-category", (d) => {
+      return d.data.category;
+    })
+    .attr("data-value", (d) => {
+      return d.data.value;
+    })
+    .attr("width", (d) => {
+      return d.x1 - d.x0;
+    })
+    .attr("height", (d) => {
+      return d.y1 - d.y0;
+    });
+  console.log(movies);
 }
